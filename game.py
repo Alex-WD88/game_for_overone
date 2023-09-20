@@ -52,8 +52,8 @@ walk_right = [
 walk_left = [pg.transform.flip(walk_right[i], True, False) for i in range(4)]
 
 # музыка окружения
-ambient = pg.mixer.Sound('sounds/ambient/a_walk_into_space.mp3')
-ambient.set_volume(0.01)
+ambient = pg.mixer.Sound('sounds/ambient/bk_m.mp3')
+ambient.set_volume(0.03)
 
 # задник
 bg_imgs = []
