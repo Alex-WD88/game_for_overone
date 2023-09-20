@@ -134,8 +134,12 @@ while running:
 
         mouse = pg.mouse.get_pos()
         if restart_font_rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]:
-            gameplay = True
+            pos_x = 150
+            pos_y = 410
+            score = 0
             player.x = pos_x
+            player.y = pos_y
+            gameplay = True
             enemies.clear()
 
     for event in pg.event.get():
