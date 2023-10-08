@@ -2,6 +2,7 @@ import pygame as pg
 import os
 import character
 import enemy as en
+import menu
 
 # позиция персонажа по x
 pos_x = 150
@@ -52,8 +53,9 @@ walk_right = [
 walk_left = [pg.transform.flip(walk_right[i], True, False) for i in range(4)]
 
 # музыка окружения
+volume = 0.03
 ambient = pg.mixer.Sound('sounds/ambient/bk_m.mp3')
-ambient.set_volume(0.03)
+ambient.set_volume(volume)
 
 # задник
 bg_imgs = []
@@ -84,9 +86,16 @@ def draw_text(screen, text, color, x, y):
 player = character.Character(pos_x, pos_y, FORCE_JUMP, PLAYER_SPEED, divider, screen, walk_left, walk_right)
 enemies = []
 
+# создаем меню
+punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
+          (130, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
+          (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
+game = menu.Menu(punkts, font, screen, volume, draw_text, ambient)
+
 # Игровой цикл
 running = True
 gameplay = True
+game.menu()
 while running:
 
     dt = clock.tick(FPS)
@@ -112,7 +121,7 @@ while running:
             enemy.draw()
 
             if player.get_rect().colliderect(enemy.get_rect()):
-                #print('enemy touch you')
+                # print('enemy touch you')
                 gameplay = False
 
             if enemy.x < -10:
@@ -131,7 +140,8 @@ while running:
         screen.fill(FON)
         screen.blit(lose_font, (180, 100))
         screen.blit(restart_font, restart_font_rect)
-
+        gameplay = False
+        # game.menu()
         mouse = pg.mouse.get_pos()
         if restart_font_rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]:
             pos_x = 150
@@ -147,7 +157,8 @@ while running:
             running = False
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                running = False
+                # running = False
+                game.menu()
         elif event.type == pg.USEREVENT + 1:
             enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
 
