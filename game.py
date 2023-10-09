@@ -88,7 +88,7 @@ enemies = []
 
 # создаем меню
 punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
-          (130, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
+          (120, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
           (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
 game = menu.Menu(punkts, font, screen, volume, draw_text, ambient)
 
@@ -162,6 +162,6 @@ while running:
         elif event.type == pg.USEREVENT + 1:
             enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
 
-    pg.display.update()
+    pg.display.flip()
 
 pg.quit()

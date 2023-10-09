@@ -23,7 +23,7 @@ class Menu:
         mouse_pressed = pg.mouse.get_pressed()[0]
         if 100 <= mouse_x <= 400 and 300 <= mouse_y <= 350 and mouse_pressed:
             self.volume = (mouse_x - 100) / 300
-            self.volume = max(0, min(1, self.volume))
+            self.volume = max(0, min(1, int(self.volume)))
         return self.volume
 
     def render(self, num_punkt):
@@ -68,5 +68,4 @@ class Menu:
                     elif punkt == 2:
                         sys.exit()
 
-            #self.screen.blit(self.screen, (0, 0))
             pg.display.flip()
