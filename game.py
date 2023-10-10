@@ -92,6 +92,11 @@ punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
           (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
 game = menu.Menu(punkts, font, screen, volume, draw_text, ambient)
 
+# подкласс настройки
+punkts2 = [(120, 140, u'Настройка звука', (250, 250, 30), (250, 30, 250), 0),
+(120, 280, u'Назад', (250, 250, 30), (250, 30, 250), 1)]
+settings = menu.SettingsMenu(punkts2, font, screen, volume, draw_text, ambient)
+
 # Игровой цикл
 running = True
 gameplay = True

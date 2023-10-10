@@ -48,16 +48,16 @@ class Menu:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     sys.exit()
-                if event.type == pg.KEYDOWN:
-                    # if event.key == pg.K_ESCAPE:
-                    # sys.exit()
-                    # done = False
-                    if event.key == pg.K_UP:
-                        if punkt > 0:
-                            punkt -= 1
-                    if event.key == pg.K_DOWN:
-                        if punkt < len(self.punkts) - 1:
-                            punkt += 1
+                # if event.type == pg.KEYDOWN:
+                #   if event.key == pg.K_ESCAPE:
+                #       sys.exit()
+                #       done = False
+                #   if event.key == pg.K_UP:
+                #     if punkt > 0:
+                #         punkt -= 1
+                #   if event.key == pg.K_DOWN:
+                #     if punkt < len(self.punkts) - 1:
+                #         punkt += 1
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                     if punkt == 0:
                         done = False
@@ -69,3 +69,13 @@ class Menu:
                         sys.exit()
 
             pg.display.flip()
+
+
+class SettingsMenu(Menu):
+
+    def __init__(self, punkts, font, screen, volume, draw_text, ambient):
+        super().__init__(punkts, font, screen, volume, draw_text, ambient)  # вызываем конструктор родительского класса
+        self.visible = False  # добавляем атрибут visible для состояния видимости
+
+    def toggle(self):  # добавляем метод toggle для переключения видимости
+        self.visible = not self.visible
