@@ -92,11 +92,6 @@ punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
           (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
 game = menu.Menu(punkts, font, screen, volume, draw_text, ambient)
 
-# подкласс настройки
-punkts2 = [(120, 140, u'Настройка звука', (250, 250, 30), (250, 30, 250), 0),
-(120, 280, u'Назад', (250, 250, 30), (250, 30, 250), 1)]
-settings = menu.SettingsMenu(punkts2, font, screen, volume, draw_text, ambient)
-
 # Игровой цикл
 running = True
 gameplay = True
@@ -118,8 +113,6 @@ while running:
         player.draw(keys)
         score += 1 / 10
         draw_text(screen, f'Счет: {int(score)}', WHITE, 10, 10)
-        # print(int(score))
-        # print(fps)
 
         for enemy in enemies:
             enemy.update()
@@ -162,7 +155,6 @@ while running:
             running = False
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                # running = False
                 game.menu()
         elif event.type == pg.USEREVENT + 1:
             enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
