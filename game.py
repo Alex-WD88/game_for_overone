@@ -90,7 +90,8 @@ enemies = []
 punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
           (120, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
           (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
-game = menu.Menu(punkts, font, screen, volume, draw_text, ambient)
+punkts_back = [(120, 280, u'назад', (250, 250, 30), (250, 30, 250), len(punkts) + 1)]
+game = menu.Menu(punkts, punkts_back, font, screen, volume, draw_text, ambient)
 
 # Игровой цикл
 running = True
