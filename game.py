@@ -87,11 +87,12 @@ player = character.Character(pos_x, pos_y, FORCE_JUMP, PLAYER_SPEED, divider, sc
 enemies = []
 
 # создаем меню
+mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win).convert_alpha()
 punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
           (120, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
           (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
 punkts_back = [(120, 280, u'назад', (250, 250, 30), (250, 30, 250), len(punkts) + 1)]
-game = menu.Menu(punkts, punkts_back, font, screen, volume, draw_text, ambient)
+game = menu.Menu(mainMenu_img, punkts, punkts_back, font, screen, volume, draw_text, ambient)
 
 # Игровой цикл
 running = True
@@ -120,8 +121,8 @@ while running:
             enemy.draw()
 
             if player.get_rect().colliderect(enemy.get_rect()):
-                # print('enemy touch you')
-                gameplay = False
+                print('enemy touch you')
+                # gameplay = False
 
             if enemy.x < -10:
                 enemies.remove(enemy)

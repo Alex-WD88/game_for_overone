@@ -3,7 +3,8 @@ import sys
 
 
 class Menu:
-    def __init__(self, punkts, punkts_back, font, screen, volume, draw_text, ambient):
+    def __init__(self, back_img, punkts, punkts_back, font, screen, volume, draw_text, ambient):
+        self.back_img = back_img
         self.punkts = punkts
         self.punkts_back = punkts_back
         self.font = font
@@ -51,7 +52,8 @@ class Menu:
         w = 300
         r = 15
         while done:
-            self.screen.fill((0, 100, 200))
+            self.screen.blit(self.back_img, (0, 0))
+            # self.screen.fill((0, 100, 200))
             mp = pg.mouse.get_pos()
 
             if toggle:
