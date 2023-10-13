@@ -3,22 +3,25 @@ import sys
 
 
 class Menu:
-    def __init__(self, back_img, punkts, punkts_back, font, screen, volume, draw_text, ambient):
+    def __init__(self, back_img, punkts, punkts_back, font, colorS, colorF, colorFS, screen, volume, draw_text, ambient):
         self.back_img = back_img
         self.punkts = punkts
         self.punkts_back = punkts_back
         self.font = font
+        self.colorS = colorS
+        self.colorF = colorF
+        self.colorFS = colorFS
         self.screen = screen
         self.volume = volume
         self.draw_text = draw_text
         self.ambient = ambient
 
     def draw_slider(self, x, y, h, w, r):
-        pg.draw.rect(self.screen, (255, 255, 255), (x, y, w, h), 2)
-        pg.draw.rect(self.screen, (255, 255, 255), (x, y, self.volume * w, h))
-        pg.draw.circle(self.screen, (0, 0, 0), (int(x + self.volume * w), int(y + h / 2)), r)
-        self.draw_text(self.screen, "Громкость", (255, 255, 255), x, y - 40)
-        self.draw_text(self.screen, f"{int(self.volume * 100)}%", (255, 255, 255), x + w + 10, y)
+        pg.draw.rect(self.screen, (self.colorF), (x, y, self.volume * w, h))
+        pg.draw.rect(self.screen, (self.colorS), (x, y, w, h), 2)
+        pg.draw.circle(self.screen, (self.colorFS), (int(x + self.volume * w), int(y + h / 2)), r)
+        self.draw_text(self.screen, "Громкость", (self.colorS), x, y - 40)
+        self.draw_text(self.screen, f"{int(self.volume * 100)}%", (self.colorS), x + w + 20, y)
 
     def handle_input(self, x, y, h, w):
         mouse_x, mouse_y = pg.mouse.get_pos()
@@ -33,21 +36,21 @@ class Menu:
             if num_punkt == i[5]:
                 self.screen.blit(self.font.render(i[2], 1, i[4]), (i[0], i[1]))
             else:
-                self.screen.blit(self.font.render(i[2], 1, i[3]), (i[0], i[1]))
+                self.screen.blit(self.font.render(i[2], 1, i[3]), (i[0] + 5, i[1] + 5))
 
     def back_render(self, num_punkt):
         for i in self.punkts_back:
             if num_punkt == i[5]:
                 self.screen.blit(self.font.render(i[2], 1, i[4]), (i[0], i[1]))
             else:
-                self.screen.blit(self.font.render(i[2], 1, i[3]), (i[0], i[1]))
+                self.screen.blit(self.font.render(i[2], 1, i[3]), (i[0] + 5, i[1] + 5))
 
     def menu(self):
         done = True
         punkt = -1
         toggle = False
-        x = 120
-        y = 230
+        x = 440
+        y = 210
         h = 30
         w = 300
         r = 15
@@ -57,7 +60,7 @@ class Menu:
             mp = pg.mouse.get_pos()
 
             if toggle:
-                self.draw_text(self.screen, "Настройка звука", (255, 255, 255), 120, 140)
+                self.draw_text(self.screen, "Настройка звука", (self.colorS), 120, 210)
                 self.draw_slider(x, y, h, w, r)
                 volume = self.handle_input(x, y, h, w)
                 self.ambient.set_volume(volume)

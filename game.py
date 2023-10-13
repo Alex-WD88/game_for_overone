@@ -21,8 +21,10 @@ FPS = 60
 win = win_width, win_height = 960, 540
 
 WHITE = (255, 255, 255)
-FON = (134, 168, 207)
-TITLE = (38, 66, 90)
+M_FONTS = (201, 192, 187)
+HM_FONTS = (206, 197, 197)
+TITLE = (248, 248, 255)
+FM_FIELD = (101, 0, 11)
 RES = (225, 203, 215)
 
 score = 0
@@ -88,11 +90,13 @@ enemies = []
 
 # создаем меню
 mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win).convert_alpha()
-punkts = [(120, 140, u'Играть', (250, 250, 30), (250, 30, 250), 0),
-          (120, 210, u'Настройка звука', (250, 250, 30), (250, 30, 250), 1),
-          (120, 280, u'Выход', (250, 250, 30), (250, 30, 250), 2)]
-punkts_back = [(120, 280, u'назад', (250, 250, 30), (250, 30, 250), len(punkts) + 1)]
-game = menu.Menu(mainMenu_img, punkts, punkts_back, font, screen, volume, draw_text, ambient)
+gameOver_img = pg.transform.scale(pg.image.load('images/menu/GameOver.jpg'), win).convert_alpha()
+punkts = [(120, 140, u'Играть', (M_FONTS), (HM_FONTS), 0),
+          (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
+          (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+punkts_back = [(120, 280, u'назад', (M_FONTS), (HM_FONTS), len(punkts) + 1)]
+game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, volume, draw_text, ambient)
+gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, volume, draw_text, ambient)
 
 # Игровой цикл
 running = True
@@ -121,8 +125,8 @@ while running:
             enemy.draw()
 
             if player.get_rect().colliderect(enemy.get_rect()):
-                print('enemy touch you')
-                # gameplay = False
+                # print('enemy touch you')
+                gameplay = False
 
             if enemy.x < -10:
                 enemies.remove(enemy)
@@ -137,11 +141,8 @@ while running:
 
     else:
         ambient.stop()
-        screen.fill(FON)
-        screen.blit(lose_font, (180, 100))
-        screen.blit(restart_font, restart_font_rect)
         gameplay = False
-        # game.menu()
+        gameOver.menu()
         mouse = pg.mouse.get_pos()
         if restart_font_rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]:
             pos_x = 150
