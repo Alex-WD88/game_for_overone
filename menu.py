@@ -60,7 +60,6 @@ class Menu:
             if self.back_img == None:
                 surf = pg.Surface(self.win)
                 surf.fill((0, 0, 0))
-                surf.set_alpha(6000)
                 self.screen.blit(surf, (0, 0))
             else:
                 self.screen.blit(self.back_img, (0, 0))
@@ -81,6 +80,8 @@ class Menu:
                 for i in self.punkts:
                     if mp[0] > i[0] and mp[0] < i[0] + 155 and mp[1] > i[1] and mp[1] < i[1] + 50:
                         punkt = i[5]
+                        name = i[2]
+                        print(name)
                     self.render(punkt)
 
             for event in pg.event.get():

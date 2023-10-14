@@ -22,7 +22,7 @@ win = win_width, win_height = 960, 540
 
 WHITE = (255, 255, 255)
 M_FONTS = (201, 192, 187)
-HM_FONTS = (206, 197, 197)
+HM_FONTS = (173, 156, 147)
 TITLE = (248, 248, 255)
 FM_FIELD = (101, 0, 11)
 RES = (225, 203, 215)
@@ -86,18 +86,30 @@ def draw_text(screen, text, color, x, y):
 
 
 player = character.Character(pos_x, pos_y, FORCE_JUMP, PLAYER_SPEED, divider, screen, walk_left, walk_right)
+death = False
+player_jump = False
 enemies = []
 
 # создаем меню
+name_menu = ['Играть', 'Продолжить игру', 'Новая игра']
+
 mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win).convert_alpha()
 gameOver_img = pg.transform.scale(pg.image.load('images/menu/GameOver.jpg'), win).convert_alpha()
-punkts = [(120, 140, u'Играть', (M_FONTS), (HM_FONTS), 0),
-          (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
-          (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+pause_img = pg.transform.scale(pg.image.load('images/menu/alpha.png'), win).convert_alpha()
+
+for i in len(name_menu):
+    punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
+              (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
+              (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+
 punkts_back = [(120, 280, u'назад', (M_FONTS), (HM_FONTS), len(punkts) + 1)]
-game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
-gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
-pause = menu.Menu(None, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
+
+game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
+                 ambient)
+gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
+                     ambient)
+pause = menu.Menu(pause_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
+                  ambient)
 
 # Игровой цикл
 running = True
@@ -116,7 +128,7 @@ while running:
     if gameplay:
         ambient.play()
         keys = pg.key.get_pressed()
-        player.update(keys, dt)
+        player.update(keys, dt, player_jump)
         player.draw(keys)
         score += 1 / 10
         draw_text(screen, f'Счет: {int(score)}', TITLE, 10, 10)
@@ -145,12 +157,13 @@ while running:
         gameplay = False
         gameOver.menu()
         mouse = pg.mouse.get_pos()
-        if restart_font_rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]:
+        if death:
             pos_x = 150
             pos_y = 410
             score = 0
             player.x = pos_x
             player.y = pos_y
+            player_jump = False
             gameplay = True
             enemies.clear()
 

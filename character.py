@@ -16,7 +16,7 @@ class Character:
         self.delta_time = 0
         self.divider = divider
 
-    def update(self, keys, delta_time):
+    def update(self, keys, delta_time, is_jump):
         self.delta_time = delta_time
         if keys[pg.K_LEFT] and self.x > 50:
             self.x -= self.speed
@@ -46,6 +46,8 @@ class Character:
 
         if keys[pg.K_LEFT]:
             self.screen.blit(self.walk_left[index], (self.x, self.y))
+        elif keys[pg.K_UP]:
+            self.screen.blit(self.walk_right[0], (self.x, self.y))
         else:
             self.screen.blit(self.walk_right[index], (self.x, self.y))
 
