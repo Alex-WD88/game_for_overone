@@ -3,7 +3,8 @@ import sys
 
 
 class Menu:
-    def __init__(self, back_img, punkts, punkts_back, font, colorS, colorF, colorFS, screen, volume, draw_text, ambient):
+    def __init__(self, back_img, punkts, punkts_back, font, colorS, colorF, colorFS, screen, win, volume, draw_text,
+                 ambient):
         self.back_img = back_img
         self.punkts = punkts
         self.punkts_back = punkts_back
@@ -12,6 +13,7 @@ class Menu:
         self.colorF = colorF
         self.colorFS = colorFS
         self.screen = screen
+        self.win = win
         self.volume = volume
         self.draw_text = draw_text
         self.ambient = ambient
@@ -55,8 +57,13 @@ class Menu:
         w = 300
         r = 15
         while done:
-            self.screen.blit(self.back_img, (0, 0))
-            # self.screen.fill((0, 100, 200))
+            if self.back_img == None:
+                surf = pg.Surface(self.win)
+                surf.fill((0, 0, 0))
+                surf.set_alpha(6000)
+                self.screen.blit(surf, (0, 0))
+            else:
+                self.screen.blit(self.back_img, (0, 0))
             mp = pg.mouse.get_pos()
 
             if toggle:
@@ -84,7 +91,7 @@ class Menu:
                         done = False
                     elif punkt == 1:
                         toggle = True
-                    elif punkt == len(self.punkts)+1:
+                    elif punkt == len(self.punkts) + 1:
                         toggle = False
                     elif punkt == 2:
                         sys.exit()

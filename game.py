@@ -95,8 +95,9 @@ punkts = [(120, 140, u'Играть', (M_FONTS), (HM_FONTS), 0),
           (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
           (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
 punkts_back = [(120, 280, u'назад', (M_FONTS), (HM_FONTS), len(punkts) + 1)]
-game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, volume, draw_text, ambient)
-gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, volume, draw_text, ambient)
+game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
+gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
+pause = menu.Menu(None, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text, ambient)
 
 # Игровой цикл
 running = True
@@ -118,7 +119,7 @@ while running:
         player.update(keys, dt)
         player.draw(keys)
         score += 1 / 10
-        draw_text(screen, f'Счет: {int(score)}', WHITE, 10, 10)
+        draw_text(screen, f'Счет: {int(score)}', TITLE, 10, 10)
 
         for enemy in enemies:
             enemy.update()
@@ -158,7 +159,7 @@ while running:
             running = False
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                game.menu()
+                pause.menu()
         elif event.type == pg.USEREVENT + 1:
             enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
 
