@@ -49,7 +49,7 @@ class Menu:
 
     def menu(self):
         done = True
-        punkt = -1
+        punkt = 0
         name = 'Играть'
         toggle = False
         x = 440
@@ -75,7 +75,7 @@ class Menu:
                     if mp[0] > i[0] and mp[0] < i[0] + 155 and mp[1] > i[1] and mp[1] < i[1] + 50:
                         punkt = i[5]
                     else:
-                        punkt = -1
+                        punkt = 0
                     self.back_render(punkt)
             else:
                 for i in self.punkts:
@@ -85,15 +85,14 @@ class Menu:
                         #print(name)
                     self.render(punkt)
 
-            if name == 'Новая игра':
-                death = True
-                return death
-
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                     if punkt == 0:
+                        if name == 'Новая игра':
+                            death = True
+                            return death
                         done = False
                     elif punkt == 1:
                         toggle = True

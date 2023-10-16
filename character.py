@@ -16,11 +16,14 @@ class Character:
         self.delta_time = 0
         self.divider = divider
 
-    def update(self, keys, delta_time, is_jump):
+    def update(self, keys, delta_time, death):
+        if death:
+            self.is_jumping = False
+            self.jump_count = self.force
         self.delta_time = delta_time
         if keys[pg.K_LEFT] and self.x > 50:
             self.x -= self.speed
-        elif keys[pg.K_RIGHT] and self.x < 200:
+        elif keys[pg.K_RIGHT] and self.x < 250:
             self.x += self.speed
 
         if not self.is_jumping:
@@ -37,10 +40,11 @@ class Character:
                 self.is_jumping = False
                 self.jump_count = self.force
 
-    def draw(self, keys):
+    def draw(self, keys, start):
         self.anim_count += self.delta_time / self.divider
         if self.anim_count >= len(self.walk_left):
             self.anim_count = 0
+
 
         index = int(self.anim_count)
 
@@ -49,7 +53,10 @@ class Character:
         elif keys[pg.K_UP]:
             self.screen.blit(self.walk_right[0], (self.x, self.y))
         else:
-            self.screen.blit(self.walk_right[index], (self.x, self.y))
+            if start or keys[pg.K_RIGHT]:
+                self.screen.blit(self.walk_right[index], (self.x, self.y))
+            else:
+                self.screen.blit(self.walk_right[0], (self.x, self.y))
 
     def get_rect(self):
         return self.walk_left[0].get_rect(topleft=(self.x, self.y))

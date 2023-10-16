@@ -8,7 +8,7 @@ import menu
 pos_x = 150
 
 PLAYER_SPEED = 3
-FORCE_JUMP = 15
+FORCE_JUMP = 16
 ENEMY_SPEED = 6
 
 # корреляция fps
@@ -87,7 +87,6 @@ def draw_text(screen, text, color, x, y):
 
 player = character.Character(pos_x, pos_y, FORCE_JUMP, PLAYER_SPEED, divider, screen, walk_left, walk_right)
 death = False
-player_jump = False
 enemies = []
 
 # создаем меню
@@ -95,7 +94,7 @@ name_menu = ['Играть', 'Продолжить игру', 'Новая игр
 
 mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win).convert_alpha()
 gameOver_img = pg.transform.scale(pg.image.load('images/menu/GameOver.jpg'), win).convert_alpha()
-pause_img = pg.transform.scale(pg.image.load('images/menu/alpha.png'), win).convert_alpha()
+pause_img = pg.transform.scale(pg.image.load('images/menu/pause.jpg'), win).convert_alpha()
 
 punkts = [(120, 140, name_menu[0], (M_FONTS), (HM_FONTS), 0),
           (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
@@ -109,8 +108,7 @@ for i in range(len(name_menu)):
                   (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
                   (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
         pause = menu.Menu(pause_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume,
-                          draw_text,
-                          ambient)
+                          draw_text, ambient)
     elif name_menu[i] == name_menu[2]:
         punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
                   (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
@@ -121,6 +119,7 @@ for i in range(len(name_menu)):
 # Игровой цикл
 running = True
 gameplay = True
+start = False
 game.menu()
 while running:
 
@@ -131,50 +130,49 @@ while running:
     for i in range(1, len(bg_imgs)):
         screen.blit(bg_imgs[i], (bg_x[i], 0))
         screen.blit(bg_imgs[i], (bg_x[i] + win_width, 0))
+    keys = pg.key.get_pressed()
+    player.draw(keys, start)
+    player.update(keys, dt, death)
+    death = False
+    draw_text(screen, f'Счет: {int(score)}', TITLE, 10, 10)
 
-    if gameplay:
-        ambient.play()
-        keys = pg.key.get_pressed()
-        player.update(keys, dt, player_jump)
-        player.draw(keys)
-        score += 1 / 10
-        draw_text(screen, f'Счет: {int(score)}', TITLE, 10, 10)
+    if start:
+        if gameplay:
 
-        for enemy in enemies:
-            enemy.update()
-            enemy.draw()
+            ambient.play()
+            score += 1 / 10
 
-            if player.get_rect().colliderect(enemy.get_rect()):
-                #print('enemy touch you')
-                gameplay = False
+            for enemy in enemies:
+                enemy.update()
+                enemy.draw()
+                if player.get_rect().colliderect(enemy.get_rect()):
+                    # print('enemy touch you')
+                    gameplay = False
 
-            if enemy.x < -10:
-                enemies.remove(enemy)
+                if enemy.x < -10:
+                    enemies.pop(0)
 
-        for i in range(1, len(bg_imgs)):
-            speed = i
-            if speed == 1:
-                speed = len(bg_imgs) - 1
-            bg_x[i] -= speed
-            if bg_x[i] <= -win_width:
-                bg_x[i] = 0
+            for i in range(1, len(bg_imgs)):
+                speed = i
+                if speed == 1:
+                    speed = len(bg_imgs) - 1
+                bg_x[i] -= speed
+                if bg_x[i] <= -win_width:
+                    bg_x[i] = 0
 
-    else:
-        ambient.stop()
-        gameplay = False
-        gameOver.menu()
-        print(death)
-        #mouse = pg.mouse.get_pos()
-        if death:
-            print(death)
-            pos_x = 150
-            pos_y = 410
-            score = 0
-            player.x = pos_x
-            player.y = pos_y
-            player_jump = False
-            gameplay = True
-            enemies.clear()
+        else:
+            ambient.stop()
+            running = False
+            death = gameOver.menu()
+            if death:
+                bg_x = [0, 0, 0, 0, 0, 0]
+                score = 0
+                player.x = 150
+                player.y = 410
+                enemies.clear()
+                gameplay = True
+                running = True
+                start = False
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -182,9 +180,11 @@ while running:
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 pause.menu()
+            if event.key == pg.K_SPACE:
+                start = True
         elif event.type == pg.USEREVENT + 1:
-            enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
-            print('hello')
+            if len(enemies) == 0:
+                enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
 
     pg.display.flip()
 
