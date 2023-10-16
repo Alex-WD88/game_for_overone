@@ -50,6 +50,7 @@ class Menu:
     def menu(self):
         done = True
         punkt = -1
+        name = 'Играть'
         toggle = False
         x = 440
         y = 210
@@ -81,8 +82,12 @@ class Menu:
                     if mp[0] > i[0] and mp[0] < i[0] + 155 and mp[1] > i[1] and mp[1] < i[1] + 50:
                         punkt = i[5]
                         name = i[2]
-                        print(name)
+                        #print(name)
                     self.render(punkt)
+
+            if name == 'Новая игра':
+                death = True
+                return death
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:

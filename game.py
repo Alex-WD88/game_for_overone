@@ -97,19 +97,26 @@ mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win
 gameOver_img = pg.transform.scale(pg.image.load('images/menu/GameOver.jpg'), win).convert_alpha()
 pause_img = pg.transform.scale(pg.image.load('images/menu/alpha.png'), win).convert_alpha()
 
-for i in len(name_menu):
-    punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
-              (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
-              (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
-
+punkts = [(120, 140, name_menu[0], (M_FONTS), (HM_FONTS), 0),
+          (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
+          (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
 punkts_back = [(120, 280, u'назад', (M_FONTS), (HM_FONTS), len(punkts) + 1)]
-
 game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
                  ambient)
-gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
-                     ambient)
-pause = menu.Menu(pause_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
-                  ambient)
+for i in range(len(name_menu)):
+    if name_menu[i] == name_menu[1]:
+        punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
+                  (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
+                  (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+        pause = menu.Menu(pause_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume,
+                          draw_text,
+                          ambient)
+    elif name_menu[i] == name_menu[2]:
+        punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
+                  (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
+                  (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+        gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume,
+                             draw_text, ambient)
 
 # Игровой цикл
 running = True
@@ -138,7 +145,7 @@ while running:
             enemy.draw()
 
             if player.get_rect().colliderect(enemy.get_rect()):
-                # print('enemy touch you')
+                #print('enemy touch you')
                 gameplay = False
 
             if enemy.x < -10:
@@ -156,8 +163,10 @@ while running:
         ambient.stop()
         gameplay = False
         gameOver.menu()
-        mouse = pg.mouse.get_pos()
+        print(death)
+        #mouse = pg.mouse.get_pos()
         if death:
+            print(death)
             pos_x = 150
             pos_y = 410
             score = 0
@@ -175,6 +184,7 @@ while running:
                 pause.menu()
         elif event.type == pg.USEREVENT + 1:
             enemies.append(en.Enemy(win_width + 2, pos_y_en, ENEMY_SPEED, img_enemy, screen))
+            print('hello')
 
     pg.display.flip()
 
