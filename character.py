@@ -45,7 +45,6 @@ class Character:
         if self.anim_count >= len(self.walk_left):
             self.anim_count = 0
 
-
         index = int(self.anim_count)
 
         if keys[pg.K_LEFT]:

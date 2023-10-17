@@ -25,7 +25,6 @@ M_FONTS = (201, 192, 187)
 HM_FONTS = (173, 156, 147)
 TITLE = (248, 248, 255)
 FM_FIELD = (101, 0, 11)
-RES = (225, 203, 215)
 
 score = 0
 
@@ -75,10 +74,6 @@ enemy_list_in_game = []
 enemy_timer = pg.USEREVENT + 1
 pg.time.set_timer(enemy_timer, 2500)  # в данном случае 2,5 секунды
 
-lose_font = font.render('Вы проиграли', False, TITLE)
-restart_font = font.render('Перезагрузить уровень?', False, RES)
-restart_font_rect = restart_font.get_rect(topleft=(180, 200))
-
 
 def draw_text(screen, text, color, x, y):
     text_surface = font.render(text, True, color)
@@ -91,28 +86,34 @@ enemies = []
 
 # создаем меню
 name_menu = ['Играть', 'Продолжить игру', 'Новая игра']
+name_menuSound = 'Настройка звука'
+name_menuExit = 'Выход'
+name_menuBack = 'Назад'
+nemu_x = 120
+menu_y = 140
+menu_indent = 70
 
 mainMenu_img = pg.transform.scale(pg.image.load('images/menu/mainMenu.jpg'), win).convert_alpha()
 gameOver_img = pg.transform.scale(pg.image.load('images/menu/GameOver.jpg'), win).convert_alpha()
 pause_img = pg.transform.scale(pg.image.load('images/menu/pause.jpg'), win).convert_alpha()
 
-punkts = [(120, 140, name_menu[0], (M_FONTS), (HM_FONTS), 0),
-          (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
-          (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
-punkts_back = [(120, 280, u'назад', (M_FONTS), (HM_FONTS), len(punkts) + 1)]
+punkts = [(nemu_x, menu_y, name_menu[0], (M_FONTS), (HM_FONTS), 0),
+          (nemu_x, menu_y + menu_indent, name_menuSound, (M_FONTS), (HM_FONTS), 1),
+          (nemu_x, menu_y + (menu_indent * 2), name_menuExit, (M_FONTS), (HM_FONTS), 2)]
+punkts_back = [(nemu_x, menu_y + 140, name_menuBack, (M_FONTS), (HM_FONTS), len(punkts) + 1)]
 game = menu.Menu(mainMenu_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume, draw_text,
                  ambient)
 for i in range(len(name_menu)):
     if name_menu[i] == name_menu[1]:
-        punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
-                  (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
-                  (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+        punkts = [(nemu_x, menu_y, name_menu[i], (M_FONTS), (HM_FONTS), 0),
+                  (nemu_x, menu_y + menu_indent, name_menuSound, (M_FONTS), (HM_FONTS), 1),
+                  (nemu_x, menu_y + (menu_indent * 2), name_menuExit, (M_FONTS), (HM_FONTS), 2)]
         pause = menu.Menu(pause_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume,
                           draw_text, ambient)
     elif name_menu[i] == name_menu[2]:
-        punkts = [(120, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
-                  (120, 210, u'Настройка звука', (M_FONTS), (HM_FONTS), 1),
-                  (120, 280, u'Выход', (M_FONTS), (HM_FONTS), 2)]
+        punkts = [(nemu_x, 140, name_menu[i], (M_FONTS), (HM_FONTS), 0),
+                  (nemu_x, menu_y + menu_indent, name_menuSound, (M_FONTS), (HM_FONTS), 1),
+                  (nemu_x, menu_y + (menu_indent * 2), name_menuExit, (M_FONTS), (HM_FONTS), 2)]
         gameOver = menu.Menu(gameOver_img, punkts, punkts_back, font, TITLE, FM_FIELD, M_FONTS, screen, win, volume,
                              draw_text, ambient)
 
@@ -120,9 +121,10 @@ for i in range(len(name_menu)):
 running = True
 gameplay = True
 start = False
-game.menu()
+game.menu(name_menu[0], None, score, None)
+volume = game.handle_input()
+pause.draw_slider(volume)
 while running:
-
     dt = clock.tick(FPS)
     fps = clock.get_fps()
 
@@ -161,10 +163,11 @@ while running:
                     bg_x[i] = 0
 
         else:
+            death = True
             ambient.stop()
             running = False
-            death = gameOver.menu()
-            if death:
+            death = gameOver.menu(name_menu[0], name_menu[2], score, death)
+            if not death:
                 bg_x = [0, 0, 0, 0, 0, 0]
                 score = 0
                 player.x = 150
@@ -173,13 +176,16 @@ while running:
                 gameplay = True
                 running = True
                 start = False
+                death = True
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                pause.menu()
+                pause.menu(name_menu[0], None, score, None)
+                volume = pause.handle_input()
+                gameOver.draw_slider(volume)
             if event.key == pg.K_SPACE:
                 start = True
         elif event.type == pg.USEREVENT + 1:
